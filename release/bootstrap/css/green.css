@@ -72,23 +72,43 @@ rect.draw {
 }
 
 circle.draw2 {
-	fill:			#209020;
+	fill:			#FF00C6;
 	stroke-width:		72;
 }
 
 rect.draw2 {
-	fill:			#209020;
+	fill:			#FF00C6;
 	stroke-width:		72;
 }
 
 path.draw2 {
 	fill:			none;
-	stroke:			#209020;
+	stroke:			#FF00C6;
 	stroke-linecap:		round;
 	stroke-linejoin:	round;
 	stroke-opacity:		1.0;
 	fill-opacity:		1.0;
 }
+
+circle.draw3 {
+	fill:			#F095DC;
+	stroke-width:		72;
+}
+
+rect.draw3 {
+	fill:			#F095DC;
+	stroke-width:		72;
+}
+
+path.draw3 {
+	fill:			none;
+	stroke:			#F095DC;
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		1.0;
+	fill-opacity:		1.0;
+}
+
 
 .trace_hi2 {
 	fill:			none;

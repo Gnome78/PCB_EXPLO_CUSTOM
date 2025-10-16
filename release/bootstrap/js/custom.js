@@ -41,7 +41,6 @@
 //5.2	Rotation full implemented
 //5.3   Fix Bug into RoTate function.
 //5.4	Rotate -90° Add
-//Date : 16 October 2025
 //6.0	Full LocalApp migration - NoMore Ajax :) 
 //**************************************************************************************************************************************************
 
@@ -517,7 +516,7 @@ if(str.includes("inner1"))
 			var LayerInner = document.getElementById("layer_INNER") ; LayerInner.setAttribute("visibility", "visible") ;
 			var Inner_Layer = document.querySelector('#layer_INNER');
 			var tab_Inner_Layer = Inner_Layer.querySelectorAll('[class*="draw2"]');
-			if ( tab_Inner_Layer.length != 0 ) { for (var i = 0; i < tab_Inner_Layer.length; i++) { console.log("Remove : %i", i) ; tab_Inner_Layer[i].classList.remove("svghidden"); }}
+			if ( tab_Inner_Layer.length != 0 ) { for (var i = 0; i < tab_Inner_Layer.length; i++) { tab_Inner_Layer[i].classList.remove("svghidden"); }}
 		}
 		else
 			{
