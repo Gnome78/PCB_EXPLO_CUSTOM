@@ -1,0 +1,22 @@
+IMPORTANT :
+
+In order to function correctly, the JavaScript code needs access to the local JSON file.
+To do this, you must disable CORS in your browser.
+
+For Chrome/Edge:
+----------------
+Close ALL browser tabs
+Launch with: chrome.exe --disable-web-security --user-data-dir=“C:/temp/chrome_dev”
+
+
+Firefox:
+--------
+Type about:config in the address bar.
+Search for security.fileuri.strict_origin_policy.
+Set it to false.
+
+Now you can take full advantage of the software.
+
+If you are concerned about anything, please review the JavaScript code yourself; there is no encryption or coding.
+
+Tested on Firefox 143.0.4(64b) / Chrome 141.0.7390.66(64b) under Windows11
