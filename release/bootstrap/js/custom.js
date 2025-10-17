@@ -5,7 +5,7 @@
 //1.2	Correct integration of 'stroke' in a 'style' when modifying line attributes (random color).
 //1.2	Random color is not 'necessarily' a good idea, we can fall on colors by terrible for the tracks view.
 //1.2.1 Modification custom.js and traceLine.php to display correctly (side by side) the tabs of the signals when clicking.
-//1.3	Deplacament header of line tracing response from PHP to javascript, add color under each tab created.
+//1.3	Deplacement header of line tracing response from PHP to javascript, add color under each tab created.
 //1.4	Mutualization subroutine ChangeStyle().
 //1.4.1	Add image on line tab, correction class [RemoveStyle( tab_flash_BOT]
 //1.5	Add variable listLine (list line drawn) in html file and manage it in functions Click_DOT & CloseOnglet.
@@ -42,6 +42,7 @@
 //5.3   Fix Bug into RoTate function.
 //5.4	Rotate -90° Add
 //6.0	Full LocalApp migration - NoMore Ajax :) 
+//6.1	New method to hidden/print trace.
 //**************************************************************************************************************************************************
 
 //*********************************************************************
@@ -49,7 +50,7 @@
 //* Remember : LINE1	Always	'Global Ground'  (if data exist)      *
 //*********************************************************************
 
-var VeRsion = "6.0";				// Based version
+var VeRsion = "6.1";				// Based version
 var timer;							// Init value
 var timeoutPreTrace = 250; 			// Timer before pre-tracing
 var SIDE="TOP";						// Set 'SIDE' to TOP for starting  [no more used]
@@ -441,10 +442,23 @@ str += $( this ).val() + " ";
 
 //************************** Choice #1 :Copper 
 if(str.includes("signal")) { 
+	console.log("Layer select + ", SIDE);
 	switch (SIDE) {
 		case 'TOP':	
 			window.L_COPPER=1 ;
-			var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "visible") ; 
+			console.log("TOP Selected + COPPER");
+			var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot"); 
+			LayerTopMe.setAttribute("visibility", "visible") ; LayerBotMe.setAttribute("visibility", "hidden"); 
+			
+			//NEW
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+			if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.remove("svghidden"); window.L_INNER='1' ; }}
+			
+			var LayerTopMe_pads = LayerTopMe.querySelectorAll('[class*="pads"]');
+			if ( LayerTopMe_pads.length != 0 ) { for (var i = 0; i < LayerTopMe_pads.length; i++) { LayerTopMe_pads[i].classList.remove("svghidden"); window.L_INNER='1' ; }}
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			
 			var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "hidden") ;
 			//******************************************************************************************************************************************************************
 			var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
@@ -455,8 +469,24 @@ if(str.includes("signal")) {
 			//******************************************************************************************************************************************************************
 			break;
 		case 'BOT':
-			var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "hidden") ; 
-			var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "visible") ;
+			window.L_COPPER=1 ;
+			console.log("BOT Selected + COPPER");
+			var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot"); 
+			LayerTopMe.setAttribute("visibility", "hidden") ; LayerBotMe.setAttribute("visibility", "visible") ; 
+
+			//NEW
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			var LayerToptMe_pads = LayerTopMe.querySelectorAll('[class*="pads"]');
+			if ( LayerToptMe_pads.length != 0 ) { for (var i = 0; i < LayerToptMe_pads.length; i++) { LayerToptMe_pads[i].classList.add("svghidden"); window.L_INNER='1' ; }}
+				
+			var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+			if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.add("svghidden"); window.L_INNER='1' ; }}
+				
+			var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+			if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.remove("svghidden"); window.L_INNER='1' ; }}
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			
+			
 			//******************************************************************************************************************************************************************
 			var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 			for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "visible"); }
@@ -469,8 +499,25 @@ if(str.includes("signal")) {
 	else 
 			{
 			window.L_COPPER=0 ;
-			var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "hidden") ; 
-			var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "hidden") ;
+			var LayerTopMe = document.getElementById("layer_top");
+			//LayerTopMe.setAttribute("visibility", "hidden") ; 		<-- Old method
+			
+			//NEW
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+			if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.add("svghidden"); window.L_INNER='1' ; }}
+			
+			var LayerTopMe_pads = LayerTopMe.querySelectorAll('[class*="pads"]');
+			if ( LayerTopMe_pads.length != 0 ) { for (var i = 0; i < LayerTopMe_pads.length; i++) { LayerTopMe_pads[i].classList.add("svghidden"); window.L_INNER='1' ; }}
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			
+			var LayerBotMe = document.getElementById("layer_bot");
+			//LayerBotMe.setAttribute("visibility", "hidden") ;			<-- Old method
+			
+			var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+			if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.add("svghidden"); window.L_INNER='1' ; }}
+			
+			
 			//******************************************************************************************************************************************************************
 			var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 			for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "hidden"); }
@@ -536,7 +583,8 @@ if(str.includes("inner2"))
 		else
 			{
 			console.log("LOG : Inner2 Hidden");
-			var Inner_Layer = document.querySelector('#layer_INNER'); var tab_Inner_Layer = Inner_Layer.querySelectorAll('[class*="draw3"]');
+			var Inner_Layer = document.querySelector('#layer_INNER, #layer_top'); 
+			var tab_Inner_Layer = Inner_Layer.querySelectorAll('[class*="draw3"]');
 			if ( tab_Inner_Layer.length != 0 ) { for (var i = 0; i < tab_Inner_Layer.length; i++) { tab_Inner_Layer[i].classList.add("svghidden"); window.L_INNER='1' ; }}
 			}
 
@@ -1465,6 +1513,7 @@ function Guru(messsageGuru) {
 }
 //*******************************************************************************************
 function GoToLayer(layerGoTo) {
+	console.log("GoToLayer : ", layerGoTo);
 	var pcbrev= $('#pcb_view').attr("pcbrev")
 
 	try {
@@ -1478,6 +1527,9 @@ function GoToLayer(layerGoTo) {
 	break;
 	
 	case 'BOT':	
+	var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot");
+	LayerTopMe.setAttribute("visibility", "hidden") ; LayerBotMe.setAttribute("visibility", "visible") ;
+			
 	$( "#layer_CPT" ).prop( "disabled", true ); $( "#layer_CPB" ).prop( "disabled", false );
 	var ButtonSide_top = document.getElementById("view-top-label"); document.getElementById(ButtonSide_top.classList = "btn btn-default btn"); 
 	var ButtonSide_bot = document.getElementById("view-bot-label"); document.getElementById(ButtonSide_bot.classList = "btn btn-default btn active");
@@ -1491,13 +1543,24 @@ function GoToLayer(layerGoTo) {
 	const ActualScaleXB = ActualScale_XB[0].replace("-", "");
 	const ActualScaleYB = ActualScale_YB[0].replace("-", "");
 
-var TransGo = document.getElementById("svg_drawbox");
-TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") translate(-"+GeXsizeFromSvg+",0.0)");
+	var TransGo = document.getElementById("svg_drawbox");
+	TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") translate(-"+GeXsizeFromSvg+",0.0)");
 
 
 	//*********************************************************************************************************************************
-	if (L_COPPER == "0") { var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "hidden") ;
-				           var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "hidden") 
+	if (L_COPPER == "0") { var LayerBotMe = document.getElementById("layer_bot"); var LayerTopMe = document.getElementById("layer_top"); 
+				           //LayerBotMe.setAttribute("visibility", "hidden") ; LayerTopMe.setAttribute("visibility", "hidden") ;	<- Old method
+				           
+				           //NEW
+				           console.log("Clean #1");
+							//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+							var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.add("svghidden"); }}
+				           
+ 				           var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.add("svghidden"); }}
+				           //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				           				           
 				           //*************************
 				           var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 						   for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "hidden"); }
@@ -1507,8 +1570,19 @@ TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") t
 						   //*************************
 				            }
 						   
-	if (L_COPPER == "1") { var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "visible") ;
-				           var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "hidden") 
+	if (L_COPPER == "1") { var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot"); 
+				           //LayerBotMe.setAttribute("visibility", "visible") ; LayerTopMe.setAttribute("visibility", "hidden") 	<- Old method
+				           
+				           //NEW
+				           //console.log("Clean #2");
+							//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 				            var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.add("svghidden"); }}
+							
+							var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.remove("svghidden"); }}
+				           //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				           
 			           	   //*************************
 				           var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 						   for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "visible"); }
@@ -1564,6 +1638,9 @@ TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") t
 	break;
 	
 	case 'TOP':	
+	var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot");
+	LayerTopMe.setAttribute("visibility", "visible") ; LayerBotMe.setAttribute("visibility", "hidden") ;
+	
 	$( "#layer_CPT" ).prop( "disabled", false ); $( "#layer_CPB" ).prop( "disabled", true );
 	var ButtonSide_top = document.getElementById("view-top-label"); document.getElementById(ButtonSide_top.classList = "btn btn-default btn active"); 
 	var ButtonSide_bot = document.getElementById("view-bot-label"); document.getElementById(ButtonSide_bot.classList = "btn btn-default btn"); 
@@ -1583,8 +1660,19 @@ TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") t
 
 
 	//*********************************************************************************************************************************
-	if (L_COPPER == "0") { var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "hidden") ;
-						   var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "hidden") 
+	if (L_COPPER == "0") { var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot"); 
+						   //LayerTopMe.setAttribute("visibility", "hidden") ; LayerBotMe.setAttribute("visibility", "hidden")		<- Old method
+						    
+						    //NEW
+						    //console.log("Clean #3");
+							//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+							var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.add("svghidden"); }}
+				            
+						    var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.add("svghidden"); }}
+				            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+						   	   
 						   //*************************
 				           var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 						   for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "hidden"); }
@@ -1594,8 +1682,19 @@ TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") t
 						   //*************************
 						   }
 						   
-	if (L_COPPER == "1") { var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "visible") ;
-		                   var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "hidden") 
+	if (L_COPPER == "1") { var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot"); 
+							// LayerTopMe.setAttribute("visibility", "visible") ; LayerBotMe.setAttribute("visibility", "hidden") 		<- Old method
+		                   	   
+		                   	//NEW
+		                   	//console.log("Clean #4");
+							//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+							var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.remove("svghidden"); }}
+				            
+						    var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.add("svghidden"); }}
+				            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		                   	   
 						   //*************************
 				           var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 						   for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "visible"); }

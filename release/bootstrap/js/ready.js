@@ -23,5 +23,7 @@ var checkExist = setInterval(function() {
 		document.getElementById("pcb-info-modal").classList = "modal fade";
 		
 		include("bootstrap/js/custom.js");
+		console.log('PCB Explorer Custom STATUS : READY');
+		console.log('------------------------------------------------');
 		clearInterval(checkExist); }}, 500); // check every 100ms
 //****************************************************************
