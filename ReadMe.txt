@@ -1,3 +1,5 @@
+[base 13/10/2025]
+
 Hi there !
 PCB Explorer Custom is a tool for oldschool computer repair.
 It's inspired from the 'Amiga PCB explorer' project available only in 'surf mode' on internet.
@@ -38,3 +40,12 @@ More information about table and data :
 More information, soon :)
 
 v1.0 13/10/2025
+
+
+[Update 21/10/2025]
+Now you can find a standalone version in 'release' directory.
+No more Apache+mysql needen, just launch the index.html
+
+Only this version will be updated in the futur.
+
+See You Soon
