@@ -5,7 +5,7 @@
 //1.2	Correct integration of 'stroke' in a 'style' when modifying line attributes (random color).
 //1.2	Random color is not 'necessarily' a good idea, we can fall on colors by terrible for the tracks view.
 //1.2.1 Modification custom.js and traceLine.php to display correctly (side by side) the tabs of the signals when clicking.
-//1.3	Deplacament header of line tracing response from PHP to javascript, add color under each tab created.
+//1.3	Deplacement header of line tracing response from PHP to javascript, add color under each tab created.
 //1.4	Mutualization subroutine ChangeStyle().
 //1.4.1	Add image on line tab, correction class [RemoveStyle( tab_flash_BOT]
 //1.5	Add variable listLine (list line drawn) in html file and manage it in functions Click_DOT & CloseOnglet.
@@ -41,6 +41,8 @@
 //5.2	Rotation full implemented
 //5.3   Fix Bug into RoTate function.
 //5.4	Rotate -90° Add
+//6.0	Full LocalApp migration - NoMore Ajax :) 
+//6.1	New method to hidden/print trace.
 //**************************************************************************************************************************************************
 
 //*********************************************************************
@@ -48,7 +50,7 @@
 //* Remember : LINE1	Always	'Global Ground'  (if data exist)      *
 //*********************************************************************
 
-var VeRsion = "5.4";				// Based version
+var VeRsion = "6.1";				// Based version
 var timer;							// Init value
 var timeoutPreTrace = 250; 			// Timer before pre-tracing
 var SIDE="TOP";						// Set 'SIDE' to TOP for starting  [no more used]
@@ -77,9 +79,350 @@ ZoOm(Zoom);
 document.onmousemove = function(e) { xMousePos = e.clientX + window.pageXOffset; yMousePos = e.clientY + window.pageYOffset };	//retreive coord. of mouse.
 //*******************************************************************************************
 $("#pcb-pcb_sel").on("change", function() {				//Catch Change style button
-    var Style = document.getElementById("pcb-pcb_sel").value;
-   $('head').append('<link rel="stylesheet" type="text/css" href="backend/stylesheet.php?style='+Style+'">');
+   var Style = document.getElementById("pcb-pcb_sel").value;
+   switch(Style) {
+	case "red":
+	pcb_view_background_color="#301010";
+	pcb_background_background_color="#701010";
+	frame_fill="#701010";
+	board_stroke="#600707";
+	rect_board_fill="#701010";
+	circle_board_fill="#600707";
+	path_draw_stroke="#c03030";
+	path_pads_stroke="#D0D0D0";
+	circle_draw_fill="#C03030";
+	circle_hi_fill="#FFFA20";
+	rect_draw_fill="#C03030";
+	circle_draw2_fill="#DDAA00";
+	rect_draw2_fill="#DDAA00";
+	path_draw2_stroke="#DDAA00";
+	circle_draw3_fill="#FFFF00";
+	rect_draw3_fill="#FFFF00";
+	path_draw3_stroke="#FFFF00";
+	trace_hi_stroke="#F0F020";
+	trace_hi2_stroke="#C0C020";
+	trace_xray_stroke="#FFFF30";
+	pads_fill="#D0D0D0";
+	pads_hi_fill="#FAFA20";
+	pads_sel_hover="#FAFA20";
+break;
+	
+	case "green":
+	pcb_view_background_color="#103010";
+	pcb_background_background_color="#107010";
+	frame_fill="#107010";
+	board_stroke="#076707";
+	rect_board_fill="#107010";
+	circle_board_fill="#076707";
+	path_draw_stroke="#30c030";
+	path_pads_stroke="#D0D0D0";
+	circle_draw_fill="#30c030";
+	circle_hi_fill="#FFFF00";
+	rect_draw_fill="#30c030";
+	circle_draw2_fill="#FF9020";
+	rect_draw2_fill="#FF9020";
+	path_draw2_stroke="#FF9020";
+	circle_draw3_fill="#FF33DD";
+	rect_draw3_fill="#FF33DD";
+	path_draw3_stroke="#FF33DD";
+	trace_hi_stroke="#F0F020";
+	trace_hi2_stroke="#C0C020";
+	trace_xray_stroke="#FFFF30";
+	pads_fill="#D0D0D0";
+	pads_hi_fill="#FFFF00";
+	pads_sel_hover="#FAFA20";
+break;
+
+case "blue":
+	pcb_view_background_color="#101030";
+	pcb_background_background_color="#101070";
+	frame_fill="#101070";
+	board_stroke="#070767";
+	rect_board_fill="#101070";
+	circle_board_fill="#070767";
+	path_draw_stroke="#3030c0";
+	path_pads_stroke="#D0D0D0";
+	circle_draw_fill="#3030c0";
+	circle_hi_fill="#FFFA20";
+	rect_draw_fill="#3030c0";
+	circle_draw2_fill="#DDAA00";
+	rect_draw2_fill="#DDAA00";
+	path_draw2_stroke="#DDAA00";
+	circle_draw3_fill="#FFFF00";
+	rect_draw3_fill="#FFFF00";
+	path_draw3_stroke="#FFFF00";
+	trace_hi_stroke="#F0F020";
+	trace_hi2_stroke="#C0C020";
+	trace_xray_stroke="#FFFF30";
+	pads_fill="#D0D0D0";
+	pads_hi_fill="#FFFF00";
+	pads_sel_hover="#FAFA20";
+break;
+
+case "proto":
+	pcb_view_background_color="#201000";
+	pcb_background_background_color="#504030";
+	frame_fill="#504030";
+	board_stroke="#473727";
+	rect_board_fill="#504030";
+	circle_board_fill="#473727";
+	path_draw_stroke="#b08050";
+	path_pads_stroke="#D0D0D0";
+	circle_draw_fill="#b08050";
+	circle_hi_fill="#FFFA20";
+	rect_draw_fill="#b08050";
+	circle_draw2_fill="#FF9020";
+	rect_draw2_fill="#FF9020";
+	path_draw2_stroke="#FF9020";
+	circle_draw3_fill="#FF33DD";
+	rect_draw3_fill="#FF33DD";
+	path_draw3_stroke="#FF33DD";
+	trace_hi_stroke="#F0F020";
+	trace_hi2_stroke="#C0C020";
+	trace_xray_stroke="#FFFF30";
+	pads_fill="#D0D0D0";
+	pads_hi_fill="#FFFF00";
+	pads_sel_hover="#FAFA20";
+break;
+
+case "dark":
+	pcb_view_background_color="#000000";
+	pcb_background_background_color="#101010";
+	frame_fill="#101010";
+	board_stroke="#070707";
+	rect_board_fill="#101010";
+	circle_board_fill="#070707";
+	path_draw_stroke="#404040";
+	path_pads_stroke="#D0D0D0";
+	circle_draw_fill="#404040";
+	circle_hi_fill="#FFFA20";
+	rect_draw_fill="#404040";
+	circle_draw2_fill="#DDAA00";
+	rect_draw2_fill="#DDAA00";
+	path_draw2_stroke="#DDAA00";
+	circle_draw3_fill="#FFFF00";
+	rect_draw3_fill="#FFFF00";
+	path_draw3_stroke="#FFFF00";
+	trace_hi_stroke="#F0F020";
+	trace_hi2_stroke="#C0C020";
+	trace_xray_stroke="#FFFF30";
+	pads_fill="#D0D0D0";
+	pads_hi_fill="#FFFF00";
+	pads_sel_hover="#FAFA20";
+break;
+   
+   default:
+            console.warn("Style inconnu : " + Style);
+	return;
+   }
+   
+   //const css = `#pcb_view { background-color:	${pcb_view_background_color}; }`;
+   const css = `/*Version 5.0 */
+   	   path.trace_hi {
+	fill:			none;
+	stroke:			${trace_hi_stroke};
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		1.0;
+	fill-opacity:		1.0;
+}
+
+#pcb_view {
+	background-color:	${pcb_view_background_color};
+}
+
+.pcb_background {
+	background-color:	${pcb_background_background_color};
+}
+
+.frame {
+	fill:			${frame_fill};
+	stroke:			black;
+	stroke-linejoin:	round;
+}
+	
+.board {
+	fill:			none;
+	stroke:			${board_stroke};
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		1.0;
+	fill-opacity:		1.0;
+}
+
+rect.board {
+	fill:			${rect_board_fill};
+}
+
+circle.board {
+	fill:			${circle_board_fill};
+}
+
+path.draw {
+	fill:			none;
+	stroke:			${path_draw_stroke};
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		1.0;
+	fill-opacity:		1.0;
+}
+
+path.pads {
+	stroke-opacity:		1.0;
+	fill-opacity:		1.0;
+	stroke:			${path_pads_stroke};
+	fill:			none;
+}
+
+circle.draw {
+	fill:			${circle_draw_fill};
+	stroke-width:		72;
+}
+
+circle.hi {
+	fill:			${circle_hi_fill};
+	stroke-width:		72;
+}
+
+rect.draw {
+	fill:			${rect_draw_fill};
+	stroke-width:		72;
+}
+
+circle.draw2 {
+	fill:			${circle_draw2_fill};
+	stroke-width:		72;
+}
+
+rect.draw2 {
+	fill:			${rect_draw2_fill};
+	stroke-width:		72;
+}
+
+path.draw2 {
+	fill:			none;
+	stroke:			${path_draw2_stroke};
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		1.0;
+	fill-opacity:		1.0;
+}
+
+circle.draw3 {
+	fill:			${circle_draw3_fill};
+	stroke-width:		72;
+}
+
+rect.draw3 {
+	fill:			${rect_draw3_fill};
+	stroke-width:		72;
+}
+
+path.draw3 {
+	fill:			none;
+	stroke:			${path_draw3_stroke};
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		1.0;
+	fill-opacity:		1.0;
+}
+
+
+.trace_hi2 {
+	fill:			none;
+	stroke:			${trace_hi2_stroke};
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		1.0;
+	fill-opacity:		1.0;
+	stroke-dasharray:	1,4;
+}
+
+.trace_xray {
+	fill:			none;
+	stroke:			${trace_xray_stroke};
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		0.6;
+	fill-opacity:		0.6;
+	stroke-dasharray:	4,4;
+}
+
+.pads {
+	stroke-opacity:		1.0;
+	fill-opacity:		1.0;
+	fill:			${pads_fill};
+	pointer-events:		all;
+}
+
+.pads_hi {
+	fill:			${pads_hi_fill};
+	cursor:			pointer;
+}
+
+.selhover {
+	fill:			${pads_sel_hover};
+	cursor:			pointer;
+}
+
+.pads_xray {
+	fill:			#FFFF30;
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		0.6;
+	fill-opacity:		0.4;
+	stroke-dasharray:	4,4;
+}
+
+.pads_click {
+	stroke-opacity:		0.0;
+	fill-opacity:		0.0;
+	fill:			#FF00FF;
+	cursor:			pointer;
+}
+
+.silk {
+	fill:			none;
+	stroke:			#FFFFFF;
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		1.0;
+	fill-opacity:		0.0;
+}
+
+.svghidden {
+	fill:			none !important;
+	stroke-opacity:		0.0 !important;
+	fill-opacity:		0.0 !important;
+}
+
+@keyframes silk_blink {
+	0%	{ stroke: #FA2020; fill: none;    fill-opacity: 0.25; }
+	50%	{ stroke: #FFFFFF; fill: #000000; fill-opacity: 0.25; }
+	100%	{ stroke: #FA2020; fill: none;    fill-opacity: 0.25; }
+}
+
+path.silk_blink {
+	animation: silk_blink 1s linear infinite;
+}
+
+path.draw_connect {
+	fill:				none;
+	stroke:				##D0D0D0;
+	stroke-linecap:		round;
+	stroke-linejoin:	round;
+	stroke-opacity:		1.0;
+	fill-opacity:		1.0;
+}
+`;
+   
+   const style = document.createElement("style");
+   style.type = "text/css";
+   style.appendChild(document.createTextNode(css.trim()));
+   document.head.appendChild(style);
 });
+   
+   
 
 $("#pcb-zoom_sel").on("change", function() { ZoOm() })		//Catch zoom button.
 $("#pcb-rotate_sel").on("change", function() { RoTate() })	//Catch rotate button.
@@ -99,10 +442,23 @@ str += $( this ).val() + " ";
 
 //************************** Choice #1 :Copper 
 if(str.includes("signal")) { 
+	console.log("Layer select + ", SIDE);
 	switch (SIDE) {
 		case 'TOP':	
 			window.L_COPPER=1 ;
-			var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "visible") ; 
+			console.log("TOP Selected + COPPER");
+			var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot"); 
+			LayerTopMe.setAttribute("visibility", "visible") ; LayerBotMe.setAttribute("visibility", "hidden"); 
+			
+			//NEW
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+			if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.remove("svghidden"); window.L_INNER='1' ; }}
+			
+			var LayerTopMe_pads = LayerTopMe.querySelectorAll('[class*="pads"]');
+			if ( LayerTopMe_pads.length != 0 ) { for (var i = 0; i < LayerTopMe_pads.length; i++) { LayerTopMe_pads[i].classList.remove("svghidden"); window.L_INNER='1' ; }}
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			
 			var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "hidden") ;
 			//******************************************************************************************************************************************************************
 			var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
@@ -113,8 +469,24 @@ if(str.includes("signal")) {
 			//******************************************************************************************************************************************************************
 			break;
 		case 'BOT':
-			var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "hidden") ; 
-			var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "visible") ;
+			window.L_COPPER=1 ;
+			console.log("BOT Selected + COPPER");
+			var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot"); 
+			LayerTopMe.setAttribute("visibility", "hidden") ; LayerBotMe.setAttribute("visibility", "visible") ; 
+
+			//NEW
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			var LayerToptMe_pads = LayerTopMe.querySelectorAll('[class*="pads"]');
+			if ( LayerToptMe_pads.length != 0 ) { for (var i = 0; i < LayerToptMe_pads.length; i++) { LayerToptMe_pads[i].classList.add("svghidden"); window.L_INNER='1' ; }}
+				
+			var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+			if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.add("svghidden"); window.L_INNER='1' ; }}
+				
+			var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+			if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.remove("svghidden"); window.L_INNER='1' ; }}
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			
+			
 			//******************************************************************************************************************************************************************
 			var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 			for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "visible"); }
@@ -127,8 +499,25 @@ if(str.includes("signal")) {
 	else 
 			{
 			window.L_COPPER=0 ;
-			var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "hidden") ; 
-			var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "hidden") ;
+			var LayerTopMe = document.getElementById("layer_top");
+			//LayerTopMe.setAttribute("visibility", "hidden") ; 		<-- Old method
+			
+			//NEW
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+			if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.add("svghidden"); window.L_INNER='1' ; }}
+			
+			var LayerTopMe_pads = LayerTopMe.querySelectorAll('[class*="pads"]');
+			if ( LayerTopMe_pads.length != 0 ) { for (var i = 0; i < LayerTopMe_pads.length; i++) { LayerTopMe_pads[i].classList.add("svghidden"); window.L_INNER='1' ; }}
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			
+			var LayerBotMe = document.getElementById("layer_bot");
+			//LayerBotMe.setAttribute("visibility", "hidden") ;			<-- Old method
+			
+			var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+			if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.add("svghidden"); window.L_INNER='1' ; }}
+			
+			
 			//******************************************************************************************************************************************************************
 			var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 			for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "hidden"); }
@@ -194,7 +583,8 @@ if(str.includes("inner2"))
 		else
 			{
 			console.log("LOG : Inner2 Hidden");
-			var Inner_Layer = document.querySelector('#layer_INNER'); var tab_Inner_Layer = Inner_Layer.querySelectorAll('[class*="draw3"]');
+			var Inner_Layer = document.querySelector('#layer_INNER, #layer_top'); 
+			var tab_Inner_Layer = Inner_Layer.querySelectorAll('[class*="draw3"]');
 			if ( tab_Inner_Layer.length != 0 ) { for (var i = 0; i < tab_Inner_Layer.length; i++) { tab_Inner_Layer[i].classList.add("svghidden"); window.L_INNER='1' ; }}
 			}
 
@@ -296,59 +686,68 @@ if (!Zoom) { var Zoom = document.getElementById("pcb-zoom_sel").value; }
 }
 //*******************************************************************************************
 function OverDOT() {
-try {
-CleanAllPreTrace();															//Clean all pre-trace in yellow
-ListView_CleanAll();														//Hide 'trace onglet' info
+    if (!window.fullSetData || window.fullSetData.length === 0) {
+        console.error('The FULL_SET data is not yet loaded');
+        return;
+    }
 
-$('#pcb-searchbox').val('');$('#pcb-searchbox2').val('');			//Clean input boxS (signal and component search)
-
-window.Over_DOT = $(this).attr("id");										//The 'clickable' identifier is retrieved.
-
-if(Over_DOT) {
-const Identify_click = Over_DOT.slice(0, 10);								//Cut to keep only the identifier (flash_SMT, click_TOP,...)
-$('#searchresult-div').html("");											//Clean the searchresult-div
-document.getElementById("searchresult-div").style.display = 'none'; 		//and set to none
-
-	switch (Identify_click) {
-	case 'flash_DRL_': {}; break ;
-	case 'click_TOP_':
-	case 'click_BOT_': {
-				var element = document.getElementById(Over_DOT);
-				element.classList.add("selhover");
-				
-				window.GePcbRev = $(pcb_view).attr("pcbrev");
-				//*******************************************************
-				$.ajax({
-					type: 'post',
-					url: 'backend/AllInOne.php',
-					data: {
-						comm:'searchover',
-						ID:Over_DOT,
-						X:xMousePos,
-						Y:yMousePos,
-						PCBREV:GePcbRev,
-						},
-						success: function (response) {
-						var TestReply = response.indexOf("Error");
-						if (response && TestReply == -1) {
-						window.ALLL_LINES = response.split('Signal:</b>&nbsp;');
-						window.SIGNALB = (ALLL_LINES[1]); 
-						window.SIGNALBB = SIGNALB.split('</b>'); 
-						window.SIGNALL = (SIGNALBB[0]); 
-						$('#over').html(response);
-						var SeekListeLine = listeLine.includes(SIGNALL+";");	//Search SIGNAL under SeekListeLine list.
-						if (! SeekListeLine && typeof Over_DOT !== 'undefined')
-						{ 
-								//If not already selected then Color the line in yellow. (after timer)
-								timer = setTimeout(function () { TraceLine(Over_DOT, 0) }, timeoutPreTrace);
-						} 	
-													}
-						}});
-					break ;	
-			}
-		}
-}
-} catch (err) { Guru("Error in OverDOT function") }
+    CleanAllPreTrace();
+    ListView_CleanAll();
+    $('#pcb-searchbox').val('');
+    $('#pcb-searchbox2').val('');
+    
+    window.Over_DOT = $(this).attr("id");
+    
+    if(Over_DOT) {
+        const Identify_click = Over_DOT.slice(0, 10);
+        $('#searchresult-div').html("");
+        document.getElementById("searchresult-div").style.display = 'none';
+        
+        switch (Identify_click) {
+            case 'flash_DRL_': 
+                break;
+                
+            case 'click_TOP_':
+            case 'click_BOT_': {
+                var element = document.getElementById(Over_DOT);
+                element.classList.add("selhover");
+                
+                window.GePcbRev = $(pcb_view).attr("pcbrev");
+                
+                const results = window.fullSetData.filter(item => item._DOT === Over_DOT);
+                
+                if (results.length > 0) {
+                    const row = results[0];
+                    window.SIGNALL = row._SIGNAL;
+                    
+                    let htmlContent = `<div class="panel amigapcb-rooltip amigapcb-window" style="display: block; opacity: 1; width: auto; height: auto; position: absolute; top: ${yMousePos + 10}px; left: ${xMousePos + 10}px;">`;
+                    htmlContent += `<div style="font-size: 12px; padding-left: 5px; padding-right: 5px;">`;
+                    
+                    if (row._NAME !== "Via") {
+                        htmlContent += `<b>${row._NAME}:</b>&nbsp;${row._PARTVALUE}</b><br>`;
+                        htmlContent += `<b>Pin:</b>&nbsp;${row._PININFO}</b><br>`;
+                        htmlContent += `<b>Signal:</b>&nbsp;${row._SIGNAL}</b>`;
+                    } else {
+                        htmlContent += `<b>${row._NAME}:</b>&nbsp;, <b>Signal:</b>&nbsp;${row._SIGNAL}</b>`;
+                    }
+                    
+                    htmlContent += `</div></div>`;
+                    $('#over').html(htmlContent);
+                    
+                    const SeekListeLine = listeLine.includes(SIGNALL + ";");
+                    
+                    if (!SeekListeLine && typeof Over_DOT !== 'undefined') {
+                        timer = setTimeout(function() {
+                            TraceLine(Over_DOT, 0);
+                        }, timeoutPreTrace);
+                    }
+                } else {
+                    $('#over').html('Error: no SIGNAL find for this DOT');
+                }
+                break;
+            }
+        }
+    }
 }
 //*******************************************************************************************
 function ClickDOT() {
@@ -373,156 +772,156 @@ function ClickDOT() {
 }
 //*******************************************************************************************
 function TraceLine(clickedot, pretrace) {
-	try {
-	if (clickedot != null ){										// Justt in case
+const dotData = window.fullSetData.find(item => item._DOT === clickedot);
+			
+// Retrieve info from the JSON data
+const SIGNAL = dotData._SIGNAL.trim();
+const LINE = dotData._LINE;
 
-	const Identify_click = clickedot.slice(0, 10);								//Cut to keep only the identifier (flash_SMT, click_TOP,...)
-	if (Identify_click != "flash_DRL_") {
-	//******************************************************************************************************************************************
-	//******************************************************************************************************************************************
-	if ($("#gnd").is(":checked")) { TRACEGND="true"; } else { var TRACEGND="false"; }
-	
-	//pretrace=0=Yellow color
-	window.GePcbRev = $(pcb_view).attr("pcbrev");
-	$.ajax({
-			type: 'post',
-			url: 'backend/AllInOne.php',
-			data: {
-			comm:'traceline',
-			IDD:clickedot,
-			PCBREV:GePcbRev,
-			SIDE:SIDE,
-			TRACEGND:TRACEGND,
-					},
-			success: function (response) {
-			var TestReply = response.indexOf("Error");
-			if (response && TestReply == -1) {
-			//Retreive info from IDs (in response)
-			let ALL_LINES = response.split('"');
-			const SIGNALR = (ALL_LINES[1]); 
-			const SIGNAL = SIGNALR.trim();
-			const LINE = (ALL_LINES[27]);  															// signal 'LINE' retrieved
-			//**********************************************
-			//Request a free color in the table if necessary
-			if (pretrace == "1") {
-				var SeekListeLine = listeLine.includes(LINE+";");									// Search SIGNAL under SeekListeLine list.
-				if (! SeekListeLine ) {	GiveMeFreeColor(); };										// SIGNAL not find in 'listeLine'
-				if (FreeColor !== -1) { 															// If COLOR IS give, let's set a lot of color value.
-					TakeColor((ListCol[FreeColor].color));
-					window.COLOR_BCKG = ListCol[FreeColor].color;
-					window.COLOR_FONT = ListCol[FreeColor].font;
-					window.COLOR_TRACE_STROKE = "stroke: "+COLOR_BCKG+" !important";				// stroke var.
-					window.COLOR_TRACE_FILL = "fill: "+COLOR_BCKG;									// fill var.
-					window.SIGNAL_ID = FreeColor;													// Just for fun.
+// Now search for LINE info in lineData to get SVG drawing info
+const lineInfo = window.lineData.find(item => item._LINE === LINE);
+
+if (!lineInfo) {
+	console.error('No LINE data found for: ' + LINE);
+	return;
+	}
+
+	if (clickedot != null) {										// Just in case
+		const Identify_click = clickedot.slice(0, 10);			//Cut to keep only the identifier (flash_SMT, click_TOP,...)
+		
+		if (Identify_click != "flash_DRL_") {
+			if ($("#gnd").is(":checked")) { TRACEGND="true"; } else { var TRACEGND="false"; }
+			
+			window.GePcbRev = $(pcb_view).attr("pcbrev");
+			
+			// Search in local JSON data instead of AJAX
+			const dotData = window.fullSetData.find(item => item._DOT === clickedot);
+			
+			if (dotData) {
+				// Retrieve info from the JSON data
+				const SIGNAL = dotData._SIGNAL.trim();
+				const LINE = dotData._LINE;
+				
+				//**********************************************
+				//Request a free color in the table if necessary
+				if (pretrace == "1") {
+					var SeekListeLine = listeLine.includes(LINE+";");						// Search SIGNAL under SeekListeLine list.
+					if (!SeekListeLine) { GiveMeFreeColor(); }								// SIGNAL not find in 'listeLine'
+					
+					if (FreeColor !== -1) { 												// If COLOR IS give, let's set a lot of color value.
+						TakeColor((ListCol[FreeColor].color));
+						window.COLOR_BCKG = ListCol[FreeColor].color;
+						window.COLOR_FONT = ListCol[FreeColor].font;
+						window.COLOR_TRACE_STROKE = "stroke: "+COLOR_BCKG+" !important";	// stroke var.
+						window.COLOR_TRACE_FILL = "fill: "+COLOR_BCKG;						// fill var.
+						window.SIGNAL_ID = FreeColor;										// Just for fun.
 						
-					ListView(LINE);																	// Create 'table' of all component for this 'LINE'
-								      }																// End of 'color is give'
-				else { NoMore(); return ;}															// Else... no more signal is allow and so, end of this function.
-								 }																	// End of test pretrace value.
-				else { window.COLOR_TRACE_STROKE = "" ; window.COLOR_TRACE_FILL = ""  };			// So, here pretrace=0, so no color to Set.
-			//****************************************************************
-			const LIST_LINETOP = (ALL_LINES[5]);
-			const LIST_LINEBOT = (ALL_LINES[7]);
-			const LIST_flash_BOT = (ALL_LINES[9]);	// Lines TOP
-			const LIST_flash_TOP = (ALL_LINES[11]);	// Lines BOT
-			const LIST_flash_SMT = (ALL_LINES[13]);	// Flashs TOP
-			const LIST_flash_SMB = (ALL_LINES[15]);	// Flashs BOT
-			const LIST_flash_CPT = (ALL_LINES[17]); // specific exp. connector TOP
-			const LIST_flash_CPB = (ALL_LINES[19]); // specific exp. connector BOT
-			const LIST_PAD_TOP = (ALL_LINES[21]);   // Pads TOP
-			const LIST_PAD_BOT = (ALL_LINES[23]);   // Pads BOT
-			const DOT_CLICKed = (ALL_LINES[25]);  	// DOT CLICKed
+						ListView(LINE);														// Create 'table' of all component for this 'LINE'
+					}																		// End of 'color is give'
+					else { NoMore(); return; }												// Else... no more signal is allow and so, end of this function.
+				}																			// End of test pretrace value.
+				else { window.COLOR_TRACE_STROKE = ""; window.COLOR_TRACE_FILL = ""; }		// So, here pretrace=0, so no color to Set.
+				
+				//****************************************************************
+				
+				//const LIST_LINETOP = lineInfo.LINETOP || "";
+				//Pre-trace ONLY if Trace_GND toogle button
+				const LIST_LINETOP = (LINE == "LINE1" && TRACEGND == "false") ? "" : (lineInfo.LINETOP || "");
+				const LIST_LINEBOT = (LINE == "LINE1" && TRACEGND == "false") ? "" : (lineInfo.LINEBOT || "");
 
-			////Formatting the header and send it if necessary
-			if( pretrace == "1" && ! SeekListeLine ) { 						// Trace NOW and create 'tab'			
-			let LETTER = ('<div onmouseover="ListView_display_or_hide(\''+(LINE)+'\', \'1\')" onclick="CloseOnglet(\''+(LINE)+'\',\''+(COLOR_BCKG)+'\',\''+(DOT_CLICKed)+'\')" class="closeSignal" id="'+(LINE)+'" style="display: inline">\n<div class="btn btn-default signal_tab" style="display: inline; background-color: '+(COLOR_BCKG)+'; color: '+(COLOR_FONT)+'; border-color: black; min-width: 100px; z-index: 20;">\n<p class="glyphicon glyphicon-remove pull-right" style="margin-top: 1px; margin-left: 2px; cursor: pointer;"></p><div style="display: inline; float: left; margin-left: 5px; overflow: hidden; direction: rtl; width: 72px; text-align: left;">'+(SIGNAL)+(response))
-			
-			$('#signal_panel').append(LETTER); 								// Send 'tab' signal box.
-			window.listeLine = listeLine.concat(LINE+";");					// Add current 'LINE" to 'listeLine'
-													 }
-
-			if (! SeekListeLine ) {											// SIGNAL not find in 'listeLine'
-			//Line Drawing Routine
-			//*********************************************************
-			var tab_LINETOP = LIST_LINETOP.split(',');
-			var tab_LINEBOT = LIST_LINEBOT.split(',');
-			var tab_flash_BOT = LIST_flash_BOT.split(',');
-			var tab_flash_TOP = LIST_flash_TOP.split(',');
-			var tab_flash_SMT = LIST_flash_SMT.split(',');
-			var tab_flash_SMB = LIST_flash_SMB.split(',');
-			var tab_xvia_flash_BOT = LIST_flash_BOT.split(',');
-			var tab_xvia_flash_TOP = LIST_flash_TOP.split(',');
-			var tab_flash_CPT = LIST_flash_CPT.split(',');
-			var tab_flash_CPB = LIST_flash_CPB.split(',');
-			var	tab_PAD_TOP = LIST_PAD_TOP.split(',');
-			var	tab_PAD_BOT = LIST_PAD_BOT.split(',');
-			//*********************************************************
-
-			//Reminder : pretrace=0=Yellow color
-			switch (SIDE) {
-			//####################################################################################################################################
-			case "TOP":
-				ChangeStyle( tab_LINETOP, "trace_hi", COLOR_TRACE_STROKE, pretrace, 1, 1);			//Set Stroke#1
-				ChangeStyle( tab_LINEBOT, "trace_xray", COLOR_TRACE_STROKE, pretrace, 1, 1);			//Set Stroke#2
-			
-			//********************************************************************************************************************************
-			if (pretrace == "1" ) { 																	//--> Start to Trace, no pre-trace
-				ChangeStyle ( tab_PAD_TOP, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);						//Fill for PAD_TOP
-				ChangeStyle ( tab_PAD_BOT, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);						//Fill for PAD_BOT
+				const LIST_flash_BOT = lineInfo.flash_BOT || "";
+				const LIST_flash_TOP = lineInfo.flash_TOP || "";
+				const LIST_flash_SMT = lineInfo.flash_SMT || "";
+				const LIST_flash_SMB = lineInfo.flash_SMB || "";
+				const LIST_flash_CPT = lineInfo.CPT || "";
+				const LIST_flash_CPB = lineInfo.CPB || "";
+				const LIST_PAD_TOP = lineInfo.PAD_TOP || "";
+				const LIST_PAD_BOT = lineInfo.PAD_BOT || "";
+				const DOT_CLICKed = clickedot;
+				
+				////Formatting the header and send it if necessary
+				if (pretrace == "1" && !SeekListeLine) { 					// Trace NOW and create 'tab'
+					let LETTER = ('<div onmouseover="ListView_display_or_hide(\''+(LINE)+'\', \'1\')" onclick="CloseOnglet(\''+(LINE)+'\',\''+(COLOR_BCKG)+'\',\''+(DOT_CLICKed)+'\')" class="closeSignal" id="'+(LINE)+'" style="display: inline">\n<div class="btn btn-default signal_tab" style="display: inline; background-color: '+(COLOR_BCKG)+'; color: '+(COLOR_FONT)+'; border-color: black; min-width: 100px; z-index: 20;">\n<p class="glyphicon glyphicon-remove pull-right" style="margin-top: 1px; margin-left: 2px; cursor: pointer;"></p><div style="display: inline; float: left; margin-left: 5px; overflow: hidden; direction: rtl; width: 72px; text-align: left;">'+(SIGNAL)+'</div></div></div>')
 					
-				ChangeStyle( tab_flash_CPT, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);						//Fill for Cartdridge Port TOP (pad and circle)
-				ChangeStyle( tab_flash_CPB, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);					//Fill for Cartdridge Port BOT (pad and circle)
+					$('#signal_panel').append(LETTER); 						// Send 'tab' signal box.
+					window.listeLine = listeLine.concat(LINE+";");			// Add current 'LINE' to 'listeLine'
+				}
 
-				ChangeStyle( tab_flash_SMT, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);						//Fill for Flash TOP
-				ChangeStyle( tab_flash_SMB, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);					//Fill for Flash BOT
-			    
-				CreateXrayDOT( tab_xvia_flash_BOT, "XRT", COLOR_TRACE_FILL);							//Fill for xvia_flash TOP
-				CreateXrayDOT( tab_xvia_flash_TOP, "XRB", COLOR_TRACE_FILL);							//Fill for xvia_flash BOT
-				
-				CreateXrayLINE( tab_LINETOP, "XRT", COLOR_TRACE_STROKE, "trace_hi");					//Stroke for xray LINE TOP
-				CreateXrayLINE( tab_LINEBOT, "XRB", COLOR_TRACE_STROKE, "trace_xray");					//Stroke for xray LINE BOT
-				
-				//ChangeStyle( tab_flash_DRL, "pads_xray", COLOR_TRACE_FILL, pretrace, 1,0); 			//Fill		<-- usefull ? not sure...
-									}
-			//********************************************************************************************************************************
-			//--> Start to pre-trace, no trace
-				//ChangeStyle( tab_flash_BOT, "pads_hi", COLOR_TRACE_STROKE, 0, 1, 0);					//Fill		<-- usefull ? Nop
-				//ChangeStyle( tab_flash_TOP, "pads_hi", COLOR_TRACE_STROKE, 0, 1, 0);					//Fill
-				break; 
-			//####################################################################################################################################
+				if (!SeekListeLine) {										// SIGNAL not find in 'listeLine'
+					//Line Drawing Routine
+					//*********************************************************
+					var tab_LINETOP = LIST_LINETOP.split(',');
+					var tab_LINEBOT = LIST_LINEBOT.split(',');
+					var tab_flash_BOT = LIST_flash_BOT.split(',');
+					var tab_flash_TOP = LIST_flash_TOP.split(',');
+					var tab_flash_SMT = LIST_flash_SMT.split(',');
+					var tab_flash_SMB = LIST_flash_SMB.split(',');
+					var tab_xvia_flash_BOT = LIST_flash_BOT.split(',');
+					var tab_xvia_flash_TOP = LIST_flash_TOP.split(',');
+					var tab_flash_CPT = LIST_flash_CPT.split(',');
+					var tab_flash_CPB = LIST_flash_CPB.split(',');
+					var tab_PAD_TOP = LIST_PAD_TOP.split(',');
+					var tab_PAD_BOT = LIST_PAD_BOT.split(',');
+					//*********************************************************
 
+					//Reminder : pretrace=0=Yellow color
+					switch (SIDE) {
+						//####################################################################################################################################
+						case "TOP":
+							ChangeStyle(tab_LINETOP, "trace_hi", COLOR_TRACE_STROKE, pretrace, 1, 1);		//Set Stroke#1
+							ChangeStyle(tab_LINEBOT, "trace_xray", COLOR_TRACE_STROKE, pretrace, 1, 1);		//Set Stroke#2
+						
+							//********************************************************************************************************************************
+							if (pretrace == "1") { 															//--> Start to Trace, no pre-trace
+								ChangeStyle(tab_PAD_TOP, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);				//Fill for PAD_TOP
+								ChangeStyle(tab_PAD_BOT, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);				//Fill for PAD_BOT
+								
+								ChangeStyle(tab_flash_CPT, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);				//Fill for Cartdridge Port TOP (pad and circle)
+								ChangeStyle(tab_flash_CPB, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);				//Fill for Cartdridge Port BOT (pad and circle)
 
-			//####################################################################################################################################
-			case "BOT":
-				ChangeStyle( tab_LINETOP, "trace_xray", COLOR_TRACE_STROKE, pretrace, 1, 1);			//Set Stroke#1
-				ChangeStyle( tab_LINEBOT, "trace_hi", COLOR_TRACE_STROKE, pretrace, 1, 1);				//Set Stroke#2
-			
-			//********************************************************************************************************************************
-			if (pretrace == "1" ) { 																	//--> Start to Trace, no pre-trace
-				ChangeStyle ( tab_PAD_TOP, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);						//Fill for PAD_TOP
-				ChangeStyle ( tab_PAD_BOT, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);						//Fill for PAD_BOT
-					
-				ChangeStyle( tab_flash_CPT, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);					//Fill for Cartdridge Port TOP (pad and circle)
-				ChangeStyle( tab_flash_CPB, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);						//Fill for Cartdridge Port BOT (pad and circle)
-
-				ChangeStyle( tab_flash_SMT, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);					//Fill for Flash TOP			<-- utilite ????
-				ChangeStyle( tab_flash_SMB, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);						//Fill for Flash BOT			<-- utilite ????
-			    
-				CreateXrayDOT( tab_xvia_flash_BOT, "XRT", COLOR_TRACE_FILL);							//Fill for xvia_flash TOP
-				CreateXrayDOT( tab_xvia_flash_TOP, "XRB", COLOR_TRACE_FILL);							//Fill for xvia_flash BOT
-				
-				CreateXrayLINE( tab_LINETOP, "XRT", COLOR_TRACE_STROKE, "trace_xray");					//Stroke for xray LINE TOP
-				CreateXrayLINE( tab_LINEBOT, "XRB", COLOR_TRACE_STROKE, "trace_hi");					//Stroke for xray LINE BOT
+								ChangeStyle(tab_flash_SMT, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);				//Fill for Flash TOP
+								ChangeStyle(tab_flash_SMB, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);				//Fill for Flash BOT
+							    
+								CreateXrayDOT(tab_xvia_flash_BOT, "XRT", COLOR_TRACE_FILL);						//Fill for xvia_flash TOP
+								CreateXrayDOT(tab_xvia_flash_TOP, "XRB", COLOR_TRACE_FILL);						//Fill for xvia_flash BOT
+								
+								CreateXrayLINE(tab_LINETOP, "XRT", COLOR_TRACE_STROKE, "trace_hi");				//Stroke for xray LINE TOP
+								CreateXrayLINE(tab_LINEBOT, "XRB", COLOR_TRACE_STROKE, "trace_xray");				//Stroke for xray LINE BOT
 							}
-			break;
-				}	// End switch
-			//***********************************************************
-			}		// End 'if SeekListeLine'
-}}})
-}
-}
-} catch (err) { Guru("Error in TraceLine function") }
-}
+							//********************************************************************************************************************************
+							break; 
+						//####################################################################################################################################
+
+						//####################################################################################################################################
+						case "BOT":
+							ChangeStyle(tab_LINETOP, "trace_xray", COLOR_TRACE_STROKE, pretrace, 1, 1);		//Set Stroke#1
+							ChangeStyle(tab_LINEBOT, "trace_hi", COLOR_TRACE_STROKE, pretrace, 1, 1);			//Set Stroke#2
+						
+							//********************************************************************************************************************************
+							if (pretrace == "1") { 															//--> Start to Trace, no pre-trace
+								ChangeStyle(tab_PAD_TOP, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);				//Fill for PAD_TOP
+								ChangeStyle(tab_PAD_BOT, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);					//Fill for PAD_BOT
+								
+								ChangeStyle(tab_flash_CPT, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);				//Fill for Cartdridge Port TOP (pad and circle)
+								ChangeStyle(tab_flash_CPB, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);					//Fill for Cartdridge Port BOT (pad and circle)
+
+								ChangeStyle(tab_flash_SMT, "pads_xray", COLOR_TRACE_FILL, 1, 1, 1);				//Fill for Flash TOP
+								ChangeStyle(tab_flash_SMB, "pads_hi", COLOR_TRACE_FILL, 1, 1, 1);					//Fill for Flash BOT
+							    
+								CreateXrayDOT(tab_xvia_flash_BOT, "XRT", COLOR_TRACE_FILL);						//Fill for xvia_flash TOP
+								CreateXrayDOT(tab_xvia_flash_TOP, "XRB", COLOR_TRACE_FILL);						//Fill for xvia_flash BOT
+								
+								CreateXrayLINE(tab_LINETOP, "XRT", COLOR_TRACE_STROKE, "trace_xray");				//Stroke for xray LINE TOP
+								CreateXrayLINE(tab_LINEBOT, "XRB", COLOR_TRACE_STROKE, "trace_hi");				//Stroke for xray LINE BOT
+							}
+							break;
+					}	// End switch
+				}		// End 'if SeekListeLine'
+			} else {
+				console.error('No data found for DOT: ' + clickedot);
+	}}
+}}
+
 //*******************************************************************************************
 function ChangeStyle(traceArray, displayClass, colorTrace, pretrace, RemoveOrSet, LockPcb) {
 try {
@@ -626,78 +1025,71 @@ for (var i = 0; i < traceArray.length; i++) {
 } catch (err) { Guru("Error in RemoveLineXray function") }
 }
 //*******************************************************************************************
-function CloseOnglet(LINE,bgrColorGrab,DOT_CLICKed) {
-	try {
+function CloseOnglet(LINE, bgrColorGrab, DOT_CLICKed) {
 	ReleaseColor(bgrColorGrab);
 	window.GePcbRev = $(pcb_view).attr("pcbrev");
 	
-	$.ajax({
-		type: 'post',
-		url: 'backend/AllInOne.php',
-		data: {
-		comm:'removeline',
-		IDD:LINE,
-		PCBREV:GePcbRev,
-				},
-		success: function (response) {
-		var TestReply = response.indexOf("Error");
-		if (response && TestReply == -1) {
-		//Recovering info from IDs (in response)
-		let ALL_LINES = response.split('"');
+	if (!window.lineData || window.lineData.length === 0) {
+		console.error('LINE data is not yet loaded');
+		return;
+	}
+	
+	// Search in local JSON data instead of AJAX
+	const lineInfo = window.lineData.find(item => item._LINE === LINE);
+	
+	if (lineInfo) {
+		//Recovering info from JSON
+		const LIST_LINETOP = lineInfo.LINETOP || "";
+		const LIST_LINEBOT = lineInfo.LINEBOT || "";
+		const LIST_flash_BOT = lineInfo.flash_BOT || "";
+		const LIST_flash_TOP = lineInfo.flash_TOP || "";
+		const LIST_flash_SMT = lineInfo.flash_SMT || "";
+		const LIST_flash_SMB = lineInfo.flash_SMB || "";
+		const LIST_flash_CPT = lineInfo.CPT || "";					// specific exp. connector TOP
+		const LIST_flash_CPB = lineInfo.CPB || "";					// specific exp. connector BOT
+		const LIST_PAD_TOP = lineInfo.PAD_TOP || "";
+		const LIST_PAD_BOT = lineInfo.PAD_BOT || "";
 		//****************************************************************
-		const LIST_LINETOP = (ALL_LINES[1]);
-		const LIST_LINEBOT = (ALL_LINES[3]);
-		const LIST_flash_BOT = (ALL_LINES[5]);
-		const LIST_flash_TOP = (ALL_LINES[7]);
-		const LIST_flash_SMT = (ALL_LINES[9]);
-		const LIST_flash_SMB = (ALL_LINES[11]);
-		const LIST_flash_CPT = (ALL_LINES[13]);									// specific exp. connector TOP
-		const LIST_flash_CPB = (ALL_LINES[15]);									// specific exp. connector BOT
-		const LIST_PAD_TOP = (ALL_LINES[17]);
-		const LIST_PAD_BOT = (ALL_LINES[19]);
-		const LINE = (ALL_LINES[21]);
-		//****************************************************************
-		window.listeLine = listeLine.replace(LINE+";",'');
+		window.listeLine = listeLine.replace(LINE+";", '');
 		
 		const LIST_xvia_flash_BOT = LIST_flash_BOT;
 		const LIST_xvia_flash_TOP = LIST_flash_TOP;
 
-		
 		//Original rendering routine on each concerned line
 		//**********************************************************
 		var tab_LINETOP = LIST_LINETOP.split(',');
-		ChangeStyle(tab_LINETOP, "draw", 0, 1, 0);								// LINETOP
+		ChangeStyle(tab_LINETOP, "draw", 0, 1, 0);							// LINETOP
 		//***********************************************************
 		var tab_LINEBOT = LIST_LINEBOT.split(',');
-		ChangeStyle(tab_LINEBOT, "draw", 0, 1, 0);								// LINEBOT
+		ChangeStyle(tab_LINEBOT, "draw", 0, 1, 0);							// LINEBOT
 		//*********************************************************** 
 		var tab_flash_BOT = LIST_flash_BOT.split(',');
-		ChangeStyle(tab_flash_BOT, "draw", 0, 1, 0);							// flash_BOT
+		ChangeStyle(tab_flash_BOT, "draw", 0, 1, 0);						// flash_BOT
 		//*********************************************************** 
 		var tab_flash_TOP = LIST_flash_TOP.split(',');
-		RemoveLine(tab_flash_TOP, "draw", 0, 1, 0);								// flash_TOP
+		RemoveLine(tab_flash_TOP, "draw", 0, 1, 0);							// flash_TOP
 		//*********************************************************** 
 		var tab_xvia_flash_BOT = LIST_xvia_flash_BOT.split(',');
-		RemoveLine(tab_xvia_flash_BOT, "draw", 0, 1, 0);						// xvia_flash_BOT (clone of LIST_flash_BOT)
+		RemoveLine(tab_xvia_flash_BOT, "draw", 0, 1, 0);					// xvia_flash_BOT (clone of LIST_flash_BOT)
 		//*********************************************************** 
 		var tab_xvia_flash_TOP = LIST_xvia_flash_TOP.split(',');
-		ChangeStyle(tab_xvia_flash_TOP, "draw", 0, 1, 0);						// xvia_flash_TOP (clone of LIST_flash_TOP)
+		ChangeStyle(tab_xvia_flash_TOP, "draw", 0, 1, 0);					// xvia_flash_TOP (clone of LIST_flash_TOP)
 		//*********************************************************** 
-		RemoveLineXray(tab_LINETOP);											// 'XRAY_' line TOP (clone of LIST_LINETOP + xray_)
+		RemoveLineXray(tab_LINETOP);										// 'XRAY_' line TOP (clone of LIST_LINETOP + xray_)
 		//*********************************************************** 
-		RemoveLineXray(tab_LINEBOT);											// 'XRAY_' line BOT (clone of LIST_LINEBOT + xray_)
+		RemoveLineXray(tab_LINEBOT);										// 'XRAY_' line BOT (clone of LIST_LINEBOT + xray_)
 		//*********************************************************** 
 		var tab_flash_CPT = LIST_flash_CPT.split(',');
-		ChangeStyle(tab_flash_CPT, "pads", 0, 1, 0);							// specific exp. connector TOP
+		ChangeStyle(tab_flash_CPT, "pads", 0, 1, 0);						// specific exp. connector TOP
 		//*********************************************************** 
 		var tab_flash_CPB = LIST_flash_CPB.split(',');
-		ChangeStyle(tab_flash_CPB, "pads", 0, 1, 0);							// specific exp. connector TOP
+		ChangeStyle(tab_flash_CPB, "pads", 0, 1, 0);						// specific exp. connector BOT
 		//*********************************************************** 
 		var tab_PAD_TOP = LIST_PAD_TOP.split(',');
-		ChangeStyle(tab_PAD_TOP, "pads_click", 0, 1, 0);						// Pads TOP return to pads_click
+		ChangeStyle(tab_PAD_TOP, "pads_click", 0, 1, 0);					// Pads TOP return to pads_click
 		//*********************************************************** 
 		var tab_PAD_BOT = LIST_PAD_BOT.split(',');
-		ChangeStyle(tab_PAD_BOT, "pads_click", 0, 1, 0);						// Pads BOT return to pads_click
+		ChangeStyle(tab_PAD_BOT, "pads_click", 0, 1, 0);					// Pads BOT return to pads_click
 		//*********************************************************** 
 		var tab_flash_SMT = LIST_flash_SMT.split(',');
 		ChangeStyle(tab_flash_SMT, "pads", 0, 1, 0);
@@ -705,14 +1097,15 @@ function CloseOnglet(LINE,bgrColorGrab,DOT_CLICKed) {
 		var tab_flash_SMB = LIST_flash_SMB.split(',');
 		ChangeStyle(tab_flash_SMB, "pads", 0, 1, 0);
 		//*********************************************************** 
-			}
-	}}
-)
-const element = document.getElementById(LINE); element.remove();
-const Tabelement = document.getElementById("listview_"+LINE);
-if (Tabelement != null) { Tabelement.remove(); }
-
-} catch (err) { Guru("Error in CloseOnglet function") }
+	} else {
+		console.error('No data found for LINE: ' + LINE);
+	}
+	
+	const element = document.getElementById(LINE);
+	if (element) { element.remove(); }
+	
+	const Tabelement = document.getElementById("listview_" + LINE);
+	if (Tabelement != null) { Tabelement.remove(); }
 }
 //*******************************************************************************************
 function GiveMeFreeColor() {
@@ -736,130 +1129,204 @@ if (SeekColor !== -1) { ListCol[SeekColor].token = '0' ; }
 };
 //*******************************************************************************************
 function SearchSignal() { 
-try {
-  var searchSignal = document.getElementById("pcb-searchbox2").value;
-     
-   if(searchSignal)
-   {
-    let NAME = searchSignal.toUpperCase();
-	window.GePcbRev = $(pcb_view).attr("pcbrev");
-    $.ajax({
-      type: 'post',
-      url: 'backend/AllInOne.php',
-      data: {
-		 comm:'searchsignal',
-         searchSignal:NAME,
-		 PCBREV:GePcbRev,
-      },
-      success: function (response) {
-	 $("#searchresult-div").css("visibility", "visible");
-     $('#searchresult-div').html(response);
-     
-     //Change position of 'response tab_search_result'
-     let tab_search_result = document.getElementById("searchresult-div");
-	 let box_search_left = document.getElementById("pcb-searchbox").getBoundingClientRect().left - 220;
-	 let box_search_top = document.getElementById("pcb-searchbox").getBoundingClientRect().top + 33;
-	 tab_search_result.setAttribute("style", "border: 0px solid black; display: block; width: 400px; height: auto; top: "+box_search_top+"px ; left: "+box_search_left+"px ;");
-	 $("#searchresult-div").show();
-
-	//*******************************************************************************************************************
-	//*******************************************************************************************************************
-	// Handler to detect a click on a <TR> of the Search Result display DIV
-	$(".divClass tr").on("click", function() {
-
-	// Retrieve the data-id of the concerned line.
-	let dataId = $(this).attr("data-id");
-	let layerId = $(this).attr("data-layer");
-	if (dataId) {	
-			GoToLayer(layerId);
-			//Create an array of each row using the comma as a reference point.
-			var tab = dataId.split(',');
-			//Loop as long as the length of the array is not reached.
-			for (var i = 0; i < tab.length; i++) { document.getElementById(tab[i]).classList= "silk_blink"; } //Set classe to blink, each array.
-			//***************************************************************************************
-			BlinkThis(tab[0]);		// set focus on first blinking element
-			//***************************************************************************************
-			$("#searchresult-div").hide(); // hide
-				}		// End 'If dataId'
+	try {
+		var searchSignal = document.getElementById("pcb-searchbox2").value;
+		
+		if(searchSignal) {
+			let NAME = searchSignal.toUpperCase();
+			window.GePcbRev = $(pcb_view).attr("pcbrev");
+			
+			if (!window.fullSetData || window.fullSetData.length === 0) {
+				console.error('FULL_SET data is not yet loaded');
+				return;
+			}
+			
+			// Search in local JSON data instead of AJAX
+			const results = window.fullSetData.filter(row => 
+				(row._SIGNAL && row._SIGNAL.toUpperCase().includes(NAME)) || 
+				(row._LINE && row._LINE.toUpperCase().includes(NAME))
+			);
+			
+			if (results.length > 0) {
+				// Build HTML table
+				let htmlContent = '<div id="list_view" class="panel panel-info" style="border: 1px solid black; display: block; width: 400px; height: auto; top: 42px; left: 1331px;">';
+				htmlContent += '<div class="table-responsive" style="max-height: 250px; width: 100%;">';
+				htmlContent += '<table class="divClass table table-bordered table-hover" style="margin-bottom: 1px;">';
+				htmlContent += '<thead><tr>';
+				htmlContent += '<th>Layer</th>';
+				htmlContent += '<th>Name/Type/Pin</th>';
+				htmlContent += '<th>Part Value</th>';
+				htmlContent += '<th>Signal</th>';
+				htmlContent += '</tr></thead>';
+				htmlContent += '<tbody>';
+				
+				results.forEach(row => {
+					if (row._PARTVALUE !== "-") {
+						htmlContent += '<tr class="table-row" data-id="' + row._FINGER + '" data-layer="' + row._LAYER + '" style="cursor: pointer;">';
+						htmlContent += '<td>' + row._LAYER + '</td>';
+						if (row._NAME !== "Via") {
+							htmlContent += '<td>' + row._NAME + ' [ ' + row._PININFO + ' ]</td>';
+							htmlContent += '<td>' + row._PARTVALUE + '</td>';
+						} else {
+							htmlContent += '<td>' + row._NAME + row._PARTVALUE + '</td><td></td>';
+						}
+						htmlContent += '<td>' + row._SIGNAL + '</td>';
+						htmlContent += '</tr>';
+					}
+				});
+				
+				htmlContent += '</tbody></table></div></div></div></div></div>';
+				
+				$("#searchresult-div").css("visibility", "visible");
+				$('#searchresult-div').html(htmlContent);
+				
+				//Change position of 'response tab_search_result'
+				let tab_search_result = document.getElementById("searchresult-div");
+				let box_search_left = document.getElementById("pcb-searchbox").getBoundingClientRect().left - 220;
+				let box_search_top = document.getElementById("pcb-searchbox").getBoundingClientRect().top + 33;
+				tab_search_result.setAttribute("style", "border: 0px solid black; display: block; width: 400px; height: auto; top: "+box_search_top+"px ; left: "+box_search_left+"px ;");
+				$("#searchresult-div").show();
+				
+				//*******************************************************************************************************************
+				// Handler to detect a click on a <TR> of the Search Result display DIV
+				$(".divClass tr").off("click");	// Remove previous handlers
+				$(".divClass tr").on("click", function() {
+					// Retrieve the data-id of the concerned line.
+					let dataId = $(this).attr("data-id");
+					let layerId = $(this).attr("data-layer");
+					if (dataId) {	
+						GoToLayer(layerId);
+						//Create an array of each row using the comma as a reference point.
+						var tab = dataId.split(',');
+						//Loop as long as the length of the array is not reached.
+						for (var i = 0; i < tab.length; i++) { 
+							document.getElementById(tab[i]).classList = "silk_blink"; 
+						}
+						//***************************************************************************************
+						BlinkThis(tab[0]);		// set focus on first blinking element
+						//***************************************************************************************
+						$("#searchresult-div").hide(); // hide
+					}		// End 'If dataId'
 				}); 	// End 'Handler click'
-	//*******************************************************************************************************************
-	//*******************************************************************************************************************
-	  }});
-	}				// End 'if searchName'
-	else { $('#searchresult-div').html(""); document.getElementById("searchresult-div").style.display = 'none'; } // hide panel
-} catch (err) { Guru("Error in SearchSignal function") }
-
-$(".divClass tr").off("click");			//Need to close the handler ?
-}					// End function
+				//*******************************************************************************************************************
+			} else {
+				$('#searchresult-div').html("");
+				document.getElementById("searchresult-div").style.display = 'none';
+			}
+		} else { 
+			$('#searchresult-div').html(""); 
+			document.getElementById("searchresult-div").style.display = 'none'; 
+		}
+	} catch (err) { 
+		Guru("Error in SearchSignal function");
+	}
+}
 //*******************************************************************************************
 function SearchComponent() {
-try {
-  var searchName = document.getElementById("pcb-searchbox").value;
-     
-   if(searchName)
-   {
-    let NAME = searchName.toUpperCase();
-	window.GePcbRev = $(pcb_view).attr("pcbrev");
-    $.ajax({
-      type: 'post',
-      url: 'backend/AllInOne.php',
-      data: {
-		 comm:'searchcomponent',
-         searchName:NAME,
-		 PCBREV:GePcbRev,
-      },
-      success: function (response) {
-	 $("#searchresult-div").css("visibility", "visible");
-     $('#searchresult-div').html(response);
-     
-     //Change position of 'response tab_search_result'
-     let tab_search_result = document.getElementById("searchresult-div");
-	 let box_search_left = document.getElementById("pcb-searchbox").getBoundingClientRect().left - 200;
-	 let box_search_top = document.getElementById("pcb-searchbox").getBoundingClientRect().top + 33;
-	 tab_search_result.setAttribute("style", "border: 0px solid black; display: block; width: 400px; height: auto; top: "+box_search_top+"px ; left: "+box_search_left+"px ;");
-	 $("#searchresult-div").show();
-
-	//*******************************************************************************************************************
-	//*******************************************************************************************************************
-	// Handler to detect a click on a <TH> of the Search Result display DIV
-	$(".divClass th").on("click", function() { 
-	var table = document.getElementById("list_view");
-	var cells = table.getElementsByTagName("tr");
-	var status = "";
-for (var i = 0; i < cells.length; i++) { statusNow = cells[i].getAttribute("data-id"); if (statusNow) { status = status + "," + statusNow } }
-	BlinkAll(status);
-			});
-	
-	
-	// Handler to detect a click on a <TR> of the Search Result display DIV
-	$(".divClass tr").on("click", function() {
-	
-	// Retrieve the data-id of the concerned line.
-	let dataId = $(this).attr("data-id");
-	
-	if (dataId) {	
-			let layerId = $(this).attr("data-layer");
-			GoToLayer(layerId);
+	try {
+		var searchName = document.getElementById("pcb-searchbox").value;
+		
+		if(searchName) {
+			let NAME = searchName.toUpperCase();
+			window.GePcbRev = $(pcb_view).attr("pcbrev");
+			
+			if (!window.componentData || window.componentData.length === 0) {
+				console.error('COMPONENT data is not yet loaded');
+				return;
+			}
+			
+			// Search in local JSON data instead of AJAX
+			const results = window.componentData.filter(row => 
+				(row.ID && row.ID.toUpperCase().startsWith(NAME)) || 
+				(row.PART_VALUE && row.PART_VALUE.toUpperCase().startsWith(NAME))
+			);
+			
+			if (results.length > 0) {
+				// Build HTML table
+				let htmlContent = '<div id="list_view" class="panel panel-info" style="border: 1px solid black; display: block; width: 400px; height: auto; top: 42px; left: 1331px;">';
+				htmlContent += '<div class="table-responsive" style="max-height: 250px; width: 100%;">';
+				htmlContent += '<table class="divClass table table-bordered table-hover" style="margin-bottom: 1px;">';
+				htmlContent += '<thead><tr bgcolor="#DDFFDD" title="click here to select all elements">';
+				htmlContent += '<th>Layer</th>';
+				htmlContent += '<th>Location</th>';
+				htmlContent += '<th>Type</th>';
+				htmlContent += '<th>Part / Value</th>';
+				htmlContent += '</tr></thead>';
+				htmlContent += '<tbody>';
 				
-			//Create an array of each row using the comma as a reference point.
-			var tab = dataId.split(',');
-			console.log("tab : %s",tab);
-			//Loop as long as the length of the array is not reached.
-			for (var i = 0; i < tab.length; i++) { document.getElementById(tab[i]).classList= "silk_blink"; } //Set classe to blink, each array.
-			//***************************************************************************************
-			BlinkThis(tab[0]);		// set focus on first blinking element
-			//***************************************************************************************
-			$("#searchresult-div").hide(); // hide
-				}		// End 'If dataId'
+				results.forEach(row => {
+					if (row.PART_VALUE !== "-") {
+						htmlContent += '<tr class="table-row" data-id="' + row.FINGER + '" data-layer="' + row.LAYER + '" style="cursor: pointer;">';
+						htmlContent += '<td>' + row.LAYER + '</td>';
+						htmlContent += '<td>' + row.ID + '</td>';
+						htmlContent += '<td>' + row.COMPONENT + '</td>';
+						htmlContent += '<td>' + row.PART_VALUE + '</td>';
+						htmlContent += '</tr>';
+					}
+				});
+				
+				htmlContent += '</tbody></table></div></div></div></div></div>';
+				
+				$("#searchresult-div").css("visibility", "visible");
+				$('#searchresult-div').html(htmlContent);
+				
+				//Change position of 'response tab_search_result'
+				let tab_search_result = document.getElementById("searchresult-div");
+				let box_search_left = document.getElementById("pcb-searchbox").getBoundingClientRect().left - 200;
+				let box_search_top = document.getElementById("pcb-searchbox").getBoundingClientRect().top + 33;
+				tab_search_result.setAttribute("style", "border: 0px solid black; display: block; width: 400px; height: auto; top: "+box_search_top+"px ; left: "+box_search_left+"px ;");
+				$("#searchresult-div").show();
+				
+				//*******************************************************************************************************************
+				// Handler to detect a click on a <TH> of the Search Result display DIV
+				$(".divClass th").off("click");	// Remove previous handlers
+				$(".divClass th").on("click", function() { 
+					var table = document.getElementById("list_view");
+					var cells = table.getElementsByTagName("tr");
+					var status = "";
+					for (var i = 0; i < cells.length; i++) { 
+						statusNow = cells[i].getAttribute("data-id"); 
+						if (statusNow) { status = status + "," + statusNow } 
+					}
+					BlinkAll(status);
+				});
+				
+				// Handler to detect a click on a <TR> of the Search Result display DIV
+				$(".divClass tr").off("click");	// Remove previous handlers
+				$(".divClass tr").on("click", function() {
+					// Retrieve the data-id of the concerned line.
+					let dataId = $(this).attr("data-id");
+					
+					if (dataId) {	
+						let layerId = $(this).attr("data-layer");
+						GoToLayer(layerId);
+						
+						//Create an array of each row using the comma as a reference point.
+						var tab = dataId.split(',');
+						console.log("tab : %s", tab);
+						//Loop as long as the length of the array is not reached.
+						for (var i = 0; i < tab.length; i++) { 
+							document.getElementById(tab[i]).classList = "silk_blink"; 
+						}
+						//***************************************************************************************
+						BlinkThis(tab[0]);		// set focus on first blinking element
+						//***************************************************************************************
+						$("#searchresult-div").hide(); // hide
+					}		// End 'If dataId'
 				}); 	// End 'Handler click'
-	//*******************************************************************************************************************
-	//*******************************************************************************************************************
-	  }});
-	}				// End 'if searchName'
-	else { $('#searchresult-div').html(""); document.getElementById("searchresult-div").style.display = 'none'; } // hide panel
-} catch (err) { Guru("Error in SearchComponent function") }
-$(".divClass tr").off("click");					//Need to close the handler ?
-}					// End function
+				//*******************************************************************************************************************
+			} else {
+				$('#searchresult-div').html("");
+				document.getElementById("searchresult-div").style.display = 'none';
+			}
+		} else { 
+			$('#searchresult-div').html(""); 
+			document.getElementById("searchresult-div").style.display = 'none'; 
+		}
+	} catch (err) { 
+		Guru("Error in SearchComponent function");
+	}
+}
 //*******************************************************************************************
 //*******************************************************************************************
 function NoMore() {
@@ -965,21 +1432,55 @@ const reverse_raw = document.querySelectorAll('[class="'+classefrom+'"]');
 //*******************************************************************************************
 function ListView(signallistview) {
 	try {
-	window.GePcbRev = $(pcb_view).attr("pcbrev");
-	$.ajax({
-			type: 'post',
-			url: 'backend/AllInOne.php',
-			data: {
-			comm:'listover',
-			line:signallistview,
-			PCBREV:GePcbRev,
-					},
-			success: function (response) {
-			var TestReply = response.indexOf("Error");
-			if (response && TestReply == -1) { $('#listview').append(response); }
-										}
-})
-} catch (err) { Guru("Error in ListView function") }
+		window.GePcbRev = $(pcb_view).attr("pcbrev");
+		
+		if (!window.fullSetData || window.fullSetData.length === 0) {
+			console.error('FULL_SET data is not yet loaded');
+			return;
+		}
+		
+		// Search in local JSON data instead of AJAX
+		const results = window.fullSetData.filter(row => row._LINE === signallistview);
+		
+		if (results.length > 0) {
+			// Build HTML content
+			let htmlContent = '<div id="listview_' + signallistview + '" style="position: absolute; width: 500px; height: auto; display: none">';
+			htmlContent += '<div class="panel panel-info collapse" style="border: 1px solid black; display: block; border-top-left-radius: 0px; border-top-right-radius: 0px; height: auto; top: 0px; left: 0px;">';
+			htmlContent += '<div>';
+			htmlContent += '<div tab_id="' + signallistview + '" id="list_view_' + signallistview + '_content" role="tabpanel" class="panel-collapse collapse in" style="margin: 2px; width: calc(100% - 6px);">';
+			htmlContent += '<div class="table-responsive" style="max-height: 250px; width: 494px;">';
+			htmlContent += '<table class="table table-bordered table-hover" style="margin-bottom: 1px;">';
+			htmlContent += '<thead>';
+			htmlContent += '<tr>';
+			htmlContent += '<th>Layer</th>';
+			htmlContent += '<th>Location</th>';
+			htmlContent += '<th>Part / Value</th>';
+			htmlContent += '<th>Pin</th>';
+			htmlContent += '</tr>';
+			htmlContent += '</thead>';
+			htmlContent += '<tbody>';
+			
+			results.forEach(row => {
+				if (row._PARTVALUE !== "-") {
+					htmlContent += '<tr class="clickable-row" style="cursor: pointer;">';
+					htmlContent += '<td>' + row._LAYER + '</td>';
+					htmlContent += '<td onclick="BlinkThis(\'' + row._FINGER + '\')">' + row._NAME + '</td>';
+					htmlContent += '<td>' + row._PARTVALUE + '</td>';
+					htmlContent += '<td>' + row._PININFO + '</td>';
+					htmlContent += '</tr>';
+				}
+			});
+			
+			htmlContent += '</tbody></table></div></div>';
+			htmlContent += '</div></div></div>';
+			
+			$('#listview').append(htmlContent);
+		} else {
+			console.warn('No data found for LINE: ' + signallistview);
+		}
+	} catch (err) { 
+		Guru("Error in ListView function");
+	}
 }
 //*******************************************************************************************
 function ListView_display_or_hide (ID_LINE, vieworhide) {			//0 = hide		1 = display
@@ -1015,6 +1516,7 @@ function Guru(messsageGuru) {
 }
 //*******************************************************************************************
 function GoToLayer(layerGoTo) {
+	console.log("GoToLayer : ", layerGoTo);
 	var pcbrev= $('#pcb_view').attr("pcbrev")
 
 	try {
@@ -1028,6 +1530,9 @@ function GoToLayer(layerGoTo) {
 	break;
 	
 	case 'BOT':	
+	var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot");
+	LayerTopMe.setAttribute("visibility", "hidden") ; LayerBotMe.setAttribute("visibility", "visible") ;
+			
 	$( "#layer_CPT" ).prop( "disabled", true ); $( "#layer_CPB" ).prop( "disabled", false );
 	var ButtonSide_top = document.getElementById("view-top-label"); document.getElementById(ButtonSide_top.classList = "btn btn-default btn"); 
 	var ButtonSide_bot = document.getElementById("view-bot-label"); document.getElementById(ButtonSide_bot.classList = "btn btn-default btn active");
@@ -1041,13 +1546,24 @@ function GoToLayer(layerGoTo) {
 	const ActualScaleXB = ActualScale_XB[0].replace("-", "");
 	const ActualScaleYB = ActualScale_YB[0].replace("-", "");
 
-var TransGo = document.getElementById("svg_drawbox");
-TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") translate(-"+GeXsizeFromSvg+",0.0)");
+	var TransGo = document.getElementById("svg_drawbox");
+	TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") translate(-"+GeXsizeFromSvg+",0.0)");
 
 
 	//*********************************************************************************************************************************
-	if (L_COPPER == "0") { var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "hidden") ;
-				           var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "hidden") 
+	if (L_COPPER == "0") { var LayerBotMe = document.getElementById("layer_bot"); var LayerTopMe = document.getElementById("layer_top"); 
+				           //LayerBotMe.setAttribute("visibility", "hidden") ; LayerTopMe.setAttribute("visibility", "hidden") ;	<- Old method
+				           
+				           //NEW
+				           console.log("Clean #1");
+							//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+							var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.add("svghidden"); }}
+				           
+ 				           var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.add("svghidden"); }}
+				           //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				           				           
 				           //*************************
 				           var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 						   for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "hidden"); }
@@ -1057,8 +1573,19 @@ TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") t
 						   //*************************
 				            }
 						   
-	if (L_COPPER == "1") { var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "visible") ;
-				           var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "hidden") 
+	if (L_COPPER == "1") { var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot"); 
+				           //LayerBotMe.setAttribute("visibility", "visible") ; LayerTopMe.setAttribute("visibility", "hidden") 	<- Old method
+				           
+				           //NEW
+				           //console.log("Clean #2");
+							//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 				            var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.add("svghidden"); }}
+							
+							var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.remove("svghidden"); }}
+				           //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				           
 			           	   //*************************
 				           var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 						   for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "visible"); }
@@ -1114,6 +1641,9 @@ TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") t
 	break;
 	
 	case 'TOP':	
+	var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot");
+	LayerTopMe.setAttribute("visibility", "visible") ; LayerBotMe.setAttribute("visibility", "hidden") ;
+	
 	$( "#layer_CPT" ).prop( "disabled", false ); $( "#layer_CPB" ).prop( "disabled", true );
 	var ButtonSide_top = document.getElementById("view-top-label"); document.getElementById(ButtonSide_top.classList = "btn btn-default btn active"); 
 	var ButtonSide_bot = document.getElementById("view-bot-label"); document.getElementById(ButtonSide_bot.classList = "btn btn-default btn"); 
@@ -1133,8 +1663,19 @@ TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") t
 
 
 	//*********************************************************************************************************************************
-	if (L_COPPER == "0") { var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "hidden") ;
-						   var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "hidden") 
+	if (L_COPPER == "0") { var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot"); 
+						   //LayerTopMe.setAttribute("visibility", "hidden") ; LayerBotMe.setAttribute("visibility", "hidden")		<- Old method
+						    
+						    //NEW
+						    //console.log("Clean #3");
+							//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+							var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.add("svghidden"); }}
+				            
+						    var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.add("svghidden"); }}
+				            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+						   	   
 						   //*************************
 				           var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 						   for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "hidden"); }
@@ -1144,8 +1685,19 @@ TransGo.setAttribute("transform", "scale(-"+ActualScaleXB+","+ActualScaleYB+") t
 						   //*************************
 						   }
 						   
-	if (L_COPPER == "1") { var LayerTopMe = document.getElementById("layer_top"); LayerTopMe.setAttribute("visibility", "visible") ;
-		                   var LayerBotMe = document.getElementById("layer_bot"); LayerBotMe.setAttribute("visibility", "hidden") 
+	if (L_COPPER == "1") { var LayerTopMe = document.getElementById("layer_top"); var LayerBotMe = document.getElementById("layer_bot"); 
+							// LayerTopMe.setAttribute("visibility", "visible") ; LayerBotMe.setAttribute("visibility", "hidden") 		<- Old method
+		                   	   
+		                   	//NEW
+		                   	//console.log("Clean #4");
+							//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+							var LayerTopMe_draw = LayerTopMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerTopMe_draw.length != 0 ) { for (var i = 0; i < LayerTopMe_draw.length; i++) { LayerTopMe_draw[i].classList.remove("svghidden"); }}
+				            
+						    var LayerBotMe_draw = LayerBotMe.querySelectorAll('[class*="draw"]:not([class*="draw2"]):not([class*="draw3"])');
+							if ( LayerBotMe_draw.length != 0 ) { for (var i = 0; i < LayerBotMe_draw.length; i++) { LayerBotMe_draw[i].classList.add("svghidden"); }}
+				            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		                   	   
 						   //*************************
 				           var Layer_Already_Traced = document.querySelector('#svg_drawbox'); var tabLayer_Already_Traced = Layer_Already_Traced.querySelectorAll(`[class^="trace_hi"]`);
 						   for (var i = 0; i < tabLayer_Already_Traced.length; i++) { tabLayer_Already_Traced[i].setAttribute("visibility", "visible"); }
