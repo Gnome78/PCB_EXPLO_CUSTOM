@@ -805,27 +805,28 @@ if (!lineInfo) {
 				//**********************************************
 				//Request a free color in the table if necessary
 				if (pretrace == "1") {
-					var SeekListeLine = listeLine.includes(LINE+";");		// Search SIGNAL under SeekListeLine list.
-					if (!SeekListeLine) { GiveMeFreeColor(); }				// SIGNAL not find in 'listeLine'
+					var SeekListeLine = listeLine.includes(LINE+";");						// Search SIGNAL under SeekListeLine list.
+					if (!SeekListeLine) { GiveMeFreeColor(); }								// SIGNAL not find in 'listeLine'
 					
-					if (FreeColor !== -1) { 								// If COLOR IS give, let's set a lot of color value.
+					if (FreeColor !== -1) { 												// If COLOR IS give, let's set a lot of color value.
 						TakeColor((ListCol[FreeColor].color));
 						window.COLOR_BCKG = ListCol[FreeColor].color;
 						window.COLOR_FONT = ListCol[FreeColor].font;
 						window.COLOR_TRACE_STROKE = "stroke: "+COLOR_BCKG+" !important";	// stroke var.
-						window.COLOR_TRACE_FILL = "fill: "+COLOR_BCKG;					// fill var.
-						window.SIGNAL_ID = FreeColor;								// Just for fun.
+						window.COLOR_TRACE_FILL = "fill: "+COLOR_BCKG;						// fill var.
+						window.SIGNAL_ID = FreeColor;										// Just for fun.
 						
-						ListView(LINE);											// Create 'table' of all component for this 'LINE'
-					}																// End of 'color is give'
-					else { NoMore(); return; }									// Else... no more signal is allow and so, end of this function.
-				}																// End of test pretrace value.
-				else { window.COLOR_TRACE_STROKE = ""; window.COLOR_TRACE_FILL = ""; }	// So, here pretrace=0, so no color to Set.
+						ListView(LINE);														// Create 'table' of all component for this 'LINE'
+					}																		// End of 'color is give'
+					else { NoMore(); return; }												// Else... no more signal is allow and so, end of this function.
+				}																			// End of test pretrace value.
+				else { window.COLOR_TRACE_STROKE = ""; window.COLOR_TRACE_FILL = ""; }		// So, here pretrace=0, so no color to Set.
 				
 				//****************************************************************
-				// Extract all LINE data from lineData (LINE.json)
-				const LIST_LINETOP = lineInfo.LINETOP || "";
-				const LIST_LINEBOT = lineInfo.LINEBOT || "";
+				//Pre-trace ONLY if Trace_GND toogle button
+				const LIST_LINETOP = (LINE == "LINE1" && TRACEGND == "false") ? "" : (lineInfo.LINETOP || "");
+				const LIST_LINEBOT = (LINE == "LINE1" && TRACEGND == "false") ? "" : (lineInfo.LINEBOT || "");
+
 				const LIST_flash_BOT = lineInfo.flash_BOT || "";
 				const LIST_flash_TOP = lineInfo.flash_TOP || "";
 				const LIST_flash_SMT = lineInfo.flash_SMT || "";
@@ -835,7 +836,7 @@ if (!lineInfo) {
 				const LIST_PAD_TOP = lineInfo.PAD_TOP || "";
 				const LIST_PAD_BOT = lineInfo.PAD_BOT || "";
 				const DOT_CLICKed = clickedot;
-
+				
 				////Formatting the header and send it if necessary
 				if (pretrace == "1" && !SeekListeLine) { 					// Trace NOW and create 'tab'
 					let LETTER = ('<div onmouseover="ListView_display_or_hide(\''+(LINE)+'\', \'1\')" onclick="CloseOnglet(\''+(LINE)+'\',\''+(COLOR_BCKG)+'\',\''+(DOT_CLICKed)+'\')" class="closeSignal" id="'+(LINE)+'" style="display: inline">\n<div class="btn btn-default signal_tab" style="display: inline; background-color: '+(COLOR_BCKG)+'; color: '+(COLOR_FONT)+'; border-color: black; min-width: 100px; z-index: 20;">\n<p class="glyphicon glyphicon-remove pull-right" style="margin-top: 1px; margin-left: 2px; cursor: pointer;"></p><div style="display: inline; float: left; margin-left: 5px; overflow: hidden; direction: rtl; width: 72px; text-align: left;">'+(SIGNAL)+'</div></div></div>')
