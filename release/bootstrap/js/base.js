@@ -10,25 +10,79 @@ window.L_HOLES=1;
 window.L_INNER=1;
 window.xMousePos="0";
 window.yMousePos="0";
-	
-//Colors lits declaration.
-const ListCol = [
-{idd: '1', color: '#ACD9E5', font: '#000000', token: '0'},
-{idd: '2',color: '#800000', font: '#FFFFFF', token: '0'},
-{idd: '3',color: '#FF80FF', font: '#000000', token: '0'},
-{idd: '4',color: '#827E17', font: '#FFFFFF', token: '0'},
-{idd: '5',color: '#00137E', font: '#FFFFFF', token: '0'},
-{idd: '6',color: '#7E087E', font: '#FFFFFF', token: '0'},
-{idd: '7',color: '#018180', font: '#FFFFFF', token: '0'},
-{idd: '8',color: '#C0C0C0', font: '#000000', token: '0'},
-{idd: '9',color: '#808080', font: '#FFFFFF', token: '0'},
-{idd: '10',color: '#FF0000', font: '#FFFFFF', token: '0'},
-{idd: '11',color: '#38FE39', font: '#000000', token: '0'},
-{idd: '12',color: '#FFFB38', font: '#000000', token: '0'},
-{idd: '13',color: '#0031FB', font: '#FFFFFF', token: '0'},
-{idd: '14',color: '#FB1CFA', font: '#FFFFFF', token: '0'},
-{idd: '15',color: '#06FFFF', font: '#000000', token: '0'},
-{idd: '16',color: '#F96B1E', font: '#FFFFFF', token: '0'} ];
+//*******************************************************************************************************************************************
+// Default configuration
+const DEFAULT_COLORS = [
+  {idd: '1', color: '#ACD9E5', font: '#000000', token: '0'},
+  {idd: '2', color: '#800000', font: '#FFFFFF', token: '0'},
+  {idd: '3', color: '#FF80FF', font: '#000000', token: '0'},
+  {idd: '4', color: '#827E17', font: '#FFFFFF', token: '0'},
+  {idd: '5', color: '#00137E', font: '#FFFFFF', token: '0'},
+  {idd: '6', color: '#7E087E', font: '#FFFFFF', token: '0'},
+  {idd: '7', color: '#018180', font: '#FFFFFF', token: '0'},
+  {idd: '8', color: '#C0C0C0', font: '#000000', token: '0'},
+  {idd: '9', color: '#808080', font: '#FFFFFF', token: '0'},
+  {idd: '10', color: '#FF0000', font: '#FFFFFF', token: '0'},
+  {idd: '11', color: '#38FE39', font: '#000000', token: '0'},
+  {idd: '12', color: '#FFFB38', font: '#000000', token: '0'},
+  {idd: '13', color: '#0031FB', font: '#FFFFFF', token: '0'},
+  {idd: '14', color: '#FB1CFA', font: '#FFFFFF', token: '0'},
+  {idd: '15', color: '#06FFFF', font: '#000000', token: '0'},
+  {idd: '16', color: '#F96B1E', font: '#FFFFFF', token: '0'}
+];
+let ListCol = DEFAULT_COLORS;
+
+// Function to load the configuration file
+async function loadColorConfig(configPath = '../../color.cfg') {
+  try {
+    const response = await fetch(configPath);
+    
+    // If the file does not exist (404) or other error
+    if (!response.ok) {
+      console.warn(`File ${configPath} not found, using default configuration`);
+      return DEFAULT_COLORS;
+    }
+    
+    const text = await response.text();
+    return parseColorConfig(text);
+    
+  } catch (error) {
+    console.warn(`Error loading ${configPath}:`, error.message);
+    console.log('Utilisation de la configuration par défaut');
+    return DEFAULT_COLORS;
+  }
+}
+
+// Function to parse the contents of the file
+function parseColorConfig(text) {
+  const lines = text.split('\n').filter(line => line.trim() !== '');
+  const colors = [];
+  
+  for (const line of lines) {
+    // Ignore comment lines (starting with # or //)
+    if (line.trim().startsWith('#') || line.trim().startsWith('//')) {
+      continue;
+    }
+    
+    const parts = line.split(':');
+    if (parts.length >= 3) {
+      const idd = parts[0].trim();
+      const color = '#' + parts[1].trim().replace('#', '');
+      const font = '#' + parts[2].trim().replace('#', '');
+      const token = parts[3] ? parts[3].trim() : '0';
+      
+      colors.push({ idd, color, font, token });
+    }
+  }
+  
+  // If parsing failed or no valid lines were found, return the default configuration.
+  if (colors.length === 0) {
+    console.warn('No valid configuration found in the file, using default configuration');
+    return DEFAULT_COLORS;
+  }
+  
+  return colors;
+}
 //*******************************************************************************************************************************************
 function include(file) { 
 var script = document.createElement('script');
@@ -37,7 +91,6 @@ script.type = 'text/javascript';
 script.defer = true;
 document.getElementsByTagName('head').item(0).appendChild(script); }
 //*******************************************************************************************************************************************
-
 function LoadHTMLData(file) {
     $('#pcb_div').empty();
 
@@ -66,7 +119,10 @@ function LoadHTMLData(file) {
         }
     });
     
-//****************************************************************************************************************
+//*******************************************************************************************************************************************
+// start loading coplor.cfg in background
+loadColorConfig
+//*******************************************************************************************************************************************
 // PRE-Load FULL_SET DataBase
 window.fullSetData = [];
     	fetch(`data/${file}/FULL_SET.json`)
