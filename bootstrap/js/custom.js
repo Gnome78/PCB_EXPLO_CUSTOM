@@ -823,8 +823,6 @@ if (!lineInfo) {
 				else { window.COLOR_TRACE_STROKE = ""; window.COLOR_TRACE_FILL = ""; }		// So, here pretrace=0, so no color to Set.
 				
 				//****************************************************************
-				
-				//const LIST_LINETOP = lineInfo.LINETOP || "";
 				//Pre-trace ONLY if Trace_GND toogle button
 				const LIST_LINETOP = (LINE == "LINE1" && TRACEGND == "false") ? "" : (lineInfo.LINETOP || "");
 				const LIST_LINEBOT = (LINE == "LINE1" && TRACEGND == "false") ? "" : (lineInfo.LINEBOT || "");
